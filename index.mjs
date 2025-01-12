@@ -1,7 +1,31 @@
 import { parseString } from 'xml2js';
 import { writeFile } from 'fs/promises';
-
+import ytdl from '@distube/ytdl-core';
+import fs from 'fs';
 const MAX_CHUNK_LENGTH = 10000;
+
+
+async function downloadYouTubeVideo(youtubeUrl) {
+  try {
+    let res = await ytdl.getBasicInfo(youtubeUrl)
+    let videoDetails = res.videoDetails
+    let videoTitle = videoDetails.title
+    let videoAuthor = videoDetails.author.name
+    let {formats} = await ytdl.getInfo(youtubeUrl);
+    // 请过滤掉mimeType中不包含video的格式
+    formats = formats.filter(format => format.hasAudio===true && format.hasVideo===true);
+    if(formats.length===0){
+      return null
+    }else{
+      let video = formats[0];
+      video.title = videoTitle;
+      video.author = videoAuthor;
+      return video
+    }
+  }catch(e){
+    console.error("获取视频信息失败", e)
+  }
+}
 
 async function requestGoogle(rawContent) {
     const from = 'en';
@@ -63,12 +87,17 @@ async function translateText(text) {
     let translatedText = '';
     for (const chunk of chunks) {
         let translationResult = await requestGoogle(chunk);
+        // 检查字符串中是否存在不可见空格
         if (translationResult && translationResult.error) {
             return translationResult.error;
         }
         // Replace '&' with '&'
         translationResult = translationResult.replace(/&/g, '&');
-        translatedText += translationResult;
+        // 删除特殊字符<200b><200c><200d>
+        translationResult = translationResult.replace(/[\u200B-\u200D\uFEFF]/g, '');
+        // 转换&amp;#39;s为'
+        translationResult = translationResult.replace(/&amp;#39;/g, "'");
+        translatedText += translationResult.trim();
 
     }
     return translatedText;
@@ -98,7 +127,9 @@ function decodeHTMLEntities(text) {
 }
 
 
-async function translateAndSaveVtt(videoId) {
+async function translateAndSaveVtt(youtubeUrl) {
+   // 截取youtube视频id
+    const videoId = youtubeUrl.split('v=')[1];
     const vttUrl = await getVideoInfo(videoId);
     if (!vttUrl) {
         console.error("获取字幕链接失败");
@@ -111,16 +142,10 @@ async function translateAndSaveVtt(videoId) {
         let vttContent = await response.text();
           // 解码HTML实体
         vttContent = decodeHTMLEntities(vttContent);
-
-        await writeFile(`${videoId}.raw.xml`, vttContent);
-
         // 获取中文字幕的xml内容
-        const translatedText = await translateText(vttContent);
-        await writeFile(`${videoId}.translated.xml`, translatedText);
+        let translatedText = await translateText(vttContent);
         // 两个xml内容根据时间戳进行合并成一个xml
         const mergedXml = await mergeVttXml(vttContent, translatedText);
-        // 存入文件
-        await writeFile(`${videoId}.merged.xml`, mergedXml);
         // 转换成srt格式
         const srtContent = await convertXmlToSrt(mergedXml, videoId);
         // 存入文件
@@ -206,6 +231,14 @@ async function mergeVttXml(vttContent, translatedText) {
         });
     });
 }
-// 示例用法
-const videoId = 'vAL2YtZRiIY'; // 将 'your_video_id_here' 替换为实际的 YouTube 视频 ID
-translateAndSaveVtt(videoId);
+
+const youtubeUrl = 'https://www.youtube.com/watch?v=EOZYI3F1g7c';
+
+try{
+  await translateAndSaveVtt(youtubeUrl);
+  let video = await downloadYouTubeVideo(youtubeUrl);
+  console.log(video)
+}catch(e){
+  console.error("出错", e)
+}
+
