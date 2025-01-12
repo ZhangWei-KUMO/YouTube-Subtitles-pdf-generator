@@ -1,0 +1,27 @@
+body {
+    font-family: sans-serif;
+    padding: 20px;
+}
+h1 {
+  text-align: center;
+}
+form {
+    width: 400px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+}
+label {
+    margin-bottom: 5px;
+}
+input[type="text"] {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

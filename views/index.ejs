@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube 字幕生成</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>YouTube 字幕生成</h1>
+     <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+    <form action="/generate-subtitle" method="post">
+        <label for="youtubeUrl">YouTube 视频链接:</label><br>
+        <input type="text" id="youtubeUrl" name="youtubeUrl" required><br><br>
+        <button type="submit">生成字幕</button>
+    </form>
+    <form action="/generate-downloadlink" method="post">
+        <label for="youtubeUrl">YouTube 视频链接:</label><br>
+        <input type="text" id="youtubeUrl" name="youtubeUrl" required><br><br>
+        <button type="submit">生成视频下载链接</button>
+    </form>
+</body>
+</html>

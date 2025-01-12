@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@distube/ytdl-core": "^4.15.8",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
     "html-pdf-node": "^1.0.8",
     "xml2js": "^0.6.2"
   }
