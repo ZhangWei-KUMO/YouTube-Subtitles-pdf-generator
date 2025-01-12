@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube 视频下载</title>
+    <link rel="stylesheet" href="/style.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">YouTube 视频下载</h1>
+        <form id="download-form" action="/generate-downloadlink" method="post">
+            <div class="input-group">
+                <label for="youtubeUrl">YouTube 视频链接:</label>
+                <input type="text" id="youtubeUrl" name="youtubeUrl" required>
+            </div>
+             <button type="submit" class="download-button">
+                <span class="button-text">生成下载链接</span>
+                <span class="loading-icon"><i class="fas fa-spinner fa-spin"></i></span>
+            </button>
+           
+        </form>
+        <% if (error) { %>
+            <p class="error-message"><%= error %></p>
+        <% } %>
+        <div id="download-info" class="download-info">
+        </div>
+    </div>
+      <div class="footer">
+    <p> © 2024 YouTube Video Downloader. All rights reserved.</p>
+     </div>
+    <script>
+        const downloadForm = document.getElementById('download-form');
+        const downloadInfoDiv = document.getElementById('download-info');
+        const downloadButton = document.querySelector('.download-button');
+         const buttonText = document.querySelector('.button-text');
+        const loadingIcon = document.querySelector('.loading-icon');
+
+        downloadForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // 阻止默认提交行为
+
+            const formData = new FormData(downloadForm);
+            const youtubeUrl = formData.get('youtubeUrl');
+           // 开始加载状态
+            downloadButton.disabled = true;
+            buttonText.textContent = '生成中...';
+             loadingIcon.style.display = 'inline-block'
+
+
+            try {
+                const response = await fetch('/generate-downloadlink', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                     body: JSON.stringify({ youtubeUrl: youtubeUrl })
+                });
+
+                const data = await response.json();
+                console.log(data);
+                 //结束加载状态
+                downloadButton.disabled = false;
+                 loadingIcon.style.display = 'none'
+
+                if (data.success) {
+                    buttonText.textContent = '生成下载链接';
+                    const downloadLink = data.video.downloadUrl;
+                     const qualityLabel = data.video.qualityLabel;
+                     const title = data.video.title;
+
+                    downloadInfoDiv.innerHTML = `
+                         <p><strong>标题:</strong> ${title}</p>
+                         <p><strong>清晰度:</strong> ${qualityLabel}</p>
+                         <p><strong>下载链接:</strong> <a href="${downloadLink}" download="${title}.${data.video.container}">点击下载</a></p>
+                    `;
+                } else {
+                     buttonText.textContent = '生成下载链接';
+                    downloadInfoDiv.innerHTML = `<p class="error-message">${data.error}</p>`;
+                }
+            } catch (error) {
+                 //结束加载状态
+                downloadButton.disabled = false;
+                buttonText.textContent = '生成下载链接';
+                loadingIcon.style.display = 'none';
+                 downloadInfoDiv.innerHTML = `<p class="error-message">出现错误,请查看控制台.</p>`;
+                console.error('请求错误:', error);
+            }
+        });
+    </script>
+</body>
+</html>

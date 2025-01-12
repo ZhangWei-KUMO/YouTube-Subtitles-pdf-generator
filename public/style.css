@@ -1,27 +1,177 @@
 body {
-    font-family: sans-serif;
-    padding: 20px;
-}
-h1 {
-  text-align: center;
-}
-form {
-    width: 400px;
-    margin: 20px auto;
+    font-family: 'Arial', sans-serif;
+    background-color: #0b192f;
+    color: #ffffff;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Start content at the top */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px; /* Add padding to the whole body */
 }
+
+.container {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    width: 600px;
+     margin-top: 50px; /* Add margin to move the form a bit down */
+}
+
+h1.title {
+    color: #00c6ff;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    font-size: 2.5em;
+    text-shadow: 0 0 10px rgba(0, 198, 255, 0.5);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
 label {
-    margin-bottom: 5px;
+    display: block;
+    margin-bottom: 8px;
+    color: #bbdefb;
+    font-size: 1.1em;
 }
+
 input[type="text"] {
+    padding: 12px;
+    border: 1px solid #42a5f5;
+    border-radius: 4px;
+    background-color: #1a2b44;
+    color: #ffffff;
+    font-size: 1em;
+    width: calc(100% - 24px);
+    box-sizing: border-box;
+}
+
+.download-button {
+     background: linear-gradient(to right, #00c6ff, #0072ff);
+     color: #ffffff;
+     padding: 14px 20px;
+     border: none;
+    border-radius: 6px;
+     cursor: pointer;
+     font-size: 1.1em;
+    transition: all 0.3s ease;
+     display: flex; /* Use flexbox for button elements */
+    justify-content: center;
+    align-items: center;
+     white-space: nowrap; /* Prevent button text from wrapping */
+  overflow: hidden; /* Hide overflow */
+}
+.download-button:hover {
+    transform: translateY(-2px);
+     box-shadow: 0 4px 8px rgba(0, 198, 255, 0.4);
+}
+
+.download-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+     transform: none;
+    box-shadow: none;
+}
+
+
+.loading-icon {
+    margin-left: 10px;
+     display: none;
+}
+
+.error-message {
+    color: #ff4d4d;
+    background-color: rgba(255, 77, 77, 0.1);
     padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.download-info {
+    margin-top: 20px;
+    border: 1px solid #42a5f5;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.download-info p {
     margin-bottom: 10px;
 }
-button {
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
+
+.download-info a {
+    color: #00c6ff;
+    text-decoration: none;
 }
+
+.download-info a:hover {
+    text-decoration: underline;
+}
+ .footer {
+  margin-top: auto; /* Push footer to the bottom */
+  text-align: center;
+    padding: 10px;
+    color: #777777; /* Light gray text for the footer */
+  width: 100%;
+}
+
+
+.subtitle-button {
+     background: linear-gradient(to right, #00c6ff, #0072ff);
+     color: #ffffff;
+     padding: 14px 20px;
+     border: none;
+    border-radius: 6px;
+     cursor: pointer;
+     font-size: 1.1em;
+    transition: all 0.3s ease;
+     display: flex; /* Use flexbox for button elements */
+    justify-content: center;
+    align-items: center;
+     white-space: nowrap; /* Prevent button text from wrapping */
+  overflow: hidden; /* Hide overflow */
+}
+.subtitle-button:hover {
+    transform: translateY(-2px);
+     box-shadow: 0 4px 8px rgba(0, 198, 255, 0.4);
+}
+
+.subtitle-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+     transform: none;
+    box-shadow: none;
+}
+
+.subtitle-info {
+    margin-top: 20px;
+    border: 1px solid #42a5f5;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.subtitle-info p {
+    margin-bottom: 10px;
+}
+
+.subtitle-info a {
+    color: #00c6ff;
+    text-decoration: none;
+}
+
+.subtitle-info a:hover {
+    text-decoration: underline;
+}
+
