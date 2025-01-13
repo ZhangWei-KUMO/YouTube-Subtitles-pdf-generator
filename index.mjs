@@ -1,9 +1,7 @@
 import express from 'express';
 import { parseString } from 'xml2js';
-import { writeFile } from 'fs/promises';
 import ytdl from '@distube/ytdl-core';
 import fetch from 'node-fetch';
-import fs from 'fs';
 
 const app = express();
 const port = 3000;
@@ -202,7 +200,7 @@ async function translateAndSaveVtt(youtubeUrl, res) {
             mergedSrtContent += `${originalParts[0]}\n${originalParts[1]}\n${originalParts[2]}${translatedPart ? `\n${translatedPart}` : ''}\n\n`;
         }
         // 将合并后的 SRT 文件提供给前端浏览器下载
-        res.setHeader('Content-Disposition', `attachment; filename="subtitle.srt"`);
+        res.setHeader('Content-Disposition', `attachment; filename="${videoId}.srt"`);
         res.setHeader('Content-Type', 'text/plain');
         res.send(mergedSrtContent);
         

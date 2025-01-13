@@ -9,14 +9,14 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="title">YouTube 视频下载</h1>
+        <h1 class="title">YouTube Video Downloader</h1>
         <form id="download-form" action="/generate-downloadlink" method="post">
             <div class="input-group">
-                <label for="youtubeUrl">YouTube 视频链接:</label>
+                <label for="youtubeUrl">YouTube Video Link:</label>
                 <input type="text" id="youtubeUrl" name="youtubeUrl" required>
             </div>
              <button type="submit" class="download-button">
-                <span class="button-text">生成下载链接</span>
+                <span class="button-text">Get Download Link</span>
                 <span class="loading-icon"><i class="fas fa-spinner fa-spin"></i></span>
             </button>
            
@@ -24,6 +24,9 @@
         <% if (error) { %>
             <p class="error-message"><%= error %></p>
         <% } %>
+        <div class="subtitle-info">
+            <a href="/">Download Youtube Subtitle</a>
+        </div>
         <div id="download-info" class="download-info">
         </div>
     </div>
@@ -44,7 +47,7 @@
             const youtubeUrl = formData.get('youtubeUrl');
            // 开始加载状态
             downloadButton.disabled = true;
-            buttonText.textContent = '生成中...';
+            buttonText.textContent = 'AI is working...';
              loadingIcon.style.display = 'inline-block'
 
 
@@ -64,27 +67,27 @@
                  loadingIcon.style.display = 'none'
 
                 if (data.success) {
-                    buttonText.textContent = '生成下载链接';
+                    buttonText.textContent = 'Get Download Link';
                     const downloadLink = data.video.downloadUrl;
                      const qualityLabel = data.video.qualityLabel;
                      const title = data.video.title;
 
                     downloadInfoDiv.innerHTML = `
-                         <p><strong>标题:</strong> ${title}</p>
-                         <p><strong>清晰度:</strong> ${qualityLabel}</p>
-                         <p><strong>下载链接:</strong> <a href="${downloadLink}" download="${title}.${data.video.container}">点击下载</a></p>
+                         <p><strong>Title:</strong> ${title}</p>
+                         <p><strong>Pixel level:</strong> ${qualityLabel}</p>
+                         <p><strong>link:</strong> <a href="${downloadLink}" download="${title}.${data.video.container}">Download</a></p>
                     `;
                 } else {
-                     buttonText.textContent = '生成下载链接';
+                     buttonText.textContent = 'Get Download Link';
                     downloadInfoDiv.innerHTML = `<p class="error-message">${data.error}</p>`;
                 }
             } catch (error) {
                  //结束加载状态
                 downloadButton.disabled = false;
-                buttonText.textContent = '生成下载链接';
+                buttonText.textContent = 'Get Download Link';
                 loadingIcon.style.display = 'none';
                  downloadInfoDiv.innerHTML = `<p class="error-message">出现错误,请查看控制台.</p>`;
-                console.error('请求错误:', error);
+                console.error('Error:', error);
             }
         });
     </script>

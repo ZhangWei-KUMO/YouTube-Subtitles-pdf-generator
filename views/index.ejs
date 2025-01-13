@@ -2,20 +2,20 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>YouTube 字幕生成</title>
+    <title>YouTube Subtitle Generator</title>
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="container">
-        <h1 class="title">YouTube 字幕生成</h1>
+        <h1 class="title">YouTube Subtitle Generator</h1>
         <form id="subtitle-form" action="/generate-subtitle" method="post">
             <div class="input-group">
-                <label for="youtubeUrl">YouTube 视频链接:</label>
+                <label for="youtubeUrl">YouTube video link:</label>
                 <input type="text" id="youtubeUrl" name="youtubeUrl" required>
             </div>
            <button type="submit" class="subtitle-button">
-                <span class="button-text">生成字幕</span>
+                <span class="button-text">Submit</span>
                 <span class="loading-icon"><i class="fas fa-spinner fa-spin"></i></span>
             </button>
 
@@ -23,6 +23,9 @@
          <% if (error) { %>
             <p class="error-message"><%= error %></p>
         <% } %>
+        <div class="subtitle-info">
+            <a href="/download">Download Youtube Video</a>
+        </div>
         <div id="subtitle-info" class="subtitle-info">
         </div>
     </div>
@@ -40,10 +43,12 @@
             event.preventDefault();
             const formData = new FormData(subtitleForm);
             const youtubeUrl = formData.get('youtubeUrl');
+            const videoId = youtubeUrl.split('v=')[1];
+
 
             // 开始加载状态
              subtitleButton.disabled = true;
-             buttonText.textContent = '生成中...';
+             buttonText.textContent =  'AI is working...';
              loadingIcon.style.display = 'inline-block'
              subtitleInfoDiv.innerHTML = "";
 
@@ -58,7 +63,7 @@
                 if(response.ok){
                     //结束加载状态
                   subtitleButton.disabled = false;
-                  buttonText.textContent = '生成字幕';
+                  buttonText.textContent = 'Submit';
                   loadingIcon.style.display = 'none'
                  
                    // 创建一个下载链接，并触发点击事件
@@ -66,7 +71,7 @@
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'subtitle.srt';
+                    a.download = `${videoId}.srt`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
@@ -75,13 +80,13 @@
                 } else {
                     const data = await response.json()
                    //结束加载状态
-                     subtitleButton.disabled = false;
-                    buttonText.textContent = '生成字幕';
+                    subtitleButton.disabled = false;
+                    buttonText.textContent = 'Submit';
                     loadingIcon.style.display = 'none'
-                     subtitleInfoDiv.innerHTML = `<p class="error-message">${data.error}</p>`;
+                    subtitleInfoDiv.innerHTML = `<p class="error-message">${data.error}</p>`;
                 }
             } catch (error) {
-                console.error('请求错误:', error);
+                console.error('The Error:', error);
                 //结束加载状态
                  subtitleButton.disabled = false;
                  buttonText.textContent = '生成字幕';
