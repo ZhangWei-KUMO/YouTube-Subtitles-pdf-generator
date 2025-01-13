@@ -15,24 +15,24 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 async function downloadYouTubeVideo(youtubeUrl) {
-    try {
-        let res = await ytdl.getBasicInfo(youtubeUrl)
-        let videoDetails = res.videoDetails
-        let videoTitle = videoDetails.title
-        let videoAuthor = videoDetails.author.name
-        let {formats} = await ytdl.getInfo(youtubeUrl);
-        formats = formats.filter(format => format.hasAudio===true && format.hasVideo===true);
-        if(formats.length===0){
-        return null
-        }else{
-        let video = formats[0];
-        video.title = videoTitle;
-        video.author = videoAuthor;
-        return video
-        }
-    }catch(e){
-    console.error("获取视频信息失败", e)
-    }
+ try {
+     let res = await ytdl.getBasicInfo(youtubeUrl)
+     let videoDetails = res.videoDetails
+     let videoTitle = videoDetails.title
+     let videoAuthor = videoDetails.author.name
+     let {formats} = await ytdl.getInfo(youtubeUrl);
+     formats = formats.filter(format => format.hasAudio===true && format.hasVideo===true);
+     if(formats.length===0){
+     return null
+     }else{
+     let video = formats[0];
+     video.title = videoTitle;
+     video.author = videoAuthor;
+     return video
+     }
+ }catch(e){
+ console.error("获取视频信息失败", e)
+ }
 }
 
 function formatTime(seconds) {
@@ -55,7 +55,7 @@ function decodeHTMLEntities(text) {
     return text.replace(/&|<|>|"|'|'|`/g, match => entities[match]);
 }
 
-async function convertXmlToSrt(xmlContent, videoId) {
+async function convertXmlToSrt(xmlContent) {
     return new Promise((resolve, reject) => {
         parseString(xmlContent, { explicitArray: false }, (err, xml) => {
             if (err) {
@@ -75,11 +75,9 @@ async function convertXmlToSrt(xmlContent, videoId) {
                 const end = start + duration;
                 const formattedStartTime = formatTime(start);
                 const formattedEndTime = formatTime(end);
-                const englishText = cue._ ? decodeHTMLEntities(cue._) : "";
-                const chineseText = cue.chinese ? decodeHTMLEntities(cue.chinese) : "";
+                const englishText = cue._ ? decodeHTMLEntities(cue._).replace(/\n/g, ' ') : ""; 
 
-            srtContent += `${index}\n${formattedStartTime} --> ${formattedEndTime}\n${englishText.trim()}${chineseText ? "\n" + chineseText.trim() : ""}\n\n`;
-
+            srtContent += `${index}\n${formattedStartTime} --> ${formattedEndTime}\n${englishText.trim()}\n\n`;
                 index++;
             });
             resolve(srtContent);
@@ -177,12 +175,8 @@ async function translateAndSaveVtt(youtubeUrl, res) {
         const response = await fetch(vttUrl);
         // 获取到xml内容
         let vttContent = await response.text();
-        const srtContent = await convertXmlToSrt(vttContent, videoId);
-        const fileName = `${videoId}.srt`
-        // 保存字幕文件
-        await writeFile(fileName, srtContent);
-        // 翻译成中文
-        // 根据MAX_CHUNK_LENGTH分割字幕
+        let srtContent = await convertXmlToSrt(vttContent);
+ 
         const srtChunks = chunkString(srtContent, MAX_GOOGLE_TRANSLATE_LENGTH)
 
         let translatedSrtContent = '';
@@ -191,26 +185,26 @@ async function translateAndSaveVtt(youtubeUrl, res) {
              let translatedTextChunk = await requestGoogle(srtChunk)
              translatedSrtContent += translatedTextChunk;
         }
-            // 创建带中英文字幕的合并文件
-        await writeFile('chinese.srt', translatedSrtContent);
-        // 合并字幕
+      
+        const englishSrtLines = srtContent.trim().split('\n\n');
+        const translatedLines = translatedSrtContent.trim().split('\n\n');
 
-         res.download(fileName, fileName, (err) => {
-          if (err) {
-           fs.unlink(fileName,(unlinkErr)=>{
-                if(unlinkErr){
-                    console.error("删除文件失败", unlinkErr)
-                }
-              });
-              res.render('index', { error: '下载文件出错' });
-          }else{
-             fs.unlink(fileName,(unlinkErr)=>{
-                if(unlinkErr){
-                     console.error("删除文件失败", unlinkErr)
-                 }
-              });
-           }
-       });
+         // 3. 初始化合并后的 SRT 内容字符串
+        let mergedSrtContent = '';
+
+        // 4. 遍历英文字幕块，合并中文字幕
+        for (let i = 0; i < englishSrtLines.length; i++) {
+            const originalLine = englishSrtLines[i];
+            const translatedLine = translatedLines[i];
+            const originalParts = originalLine.split('\n');
+            const translatedPart = translatedLine ? translatedLine.split('\n')[2] : "";
+            mergedSrtContent += `${originalParts[0]}\n${originalParts[1]}\n${originalParts[2]}${translatedPart ? `\n${translatedPart}` : ''}\n\n`;
+        }
+        // 将合并后的 SRT 文件提供给前端浏览器下载
+        res.setHeader('Content-Disposition', `attachment; filename="subtitle.srt"`);
+        res.setHeader('Content-Type', 'text/plain');
+        res.send(mergedSrtContent);
+        
     } catch (error) {
         console.error("处理字幕时出错:", error);
         res.render('index', { error: '处理字幕时出错' });

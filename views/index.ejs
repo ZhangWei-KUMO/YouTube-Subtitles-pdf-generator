@@ -48,20 +48,30 @@
              subtitleInfoDiv.innerHTML = "";
 
             try {
-               const response = await fetch('/generate-subtitle', {
+                const response = await fetch('/generate-subtitle', {
                 method: 'POST',
                 headers: {
                         'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ youtubeUrl: youtubeUrl })
-               });
-                 if(response.ok){
-                  //结束加载状态
-                    subtitleButton.disabled = false;
-                    buttonText.textContent = '生成字幕';
-                    loadingIcon.style.display = 'none'
-                     subtitleInfoDiv.innerHTML = `<p>字幕文件正在下载...</p>`;
-                   
+                });
+                if(response.ok){
+                    //结束加载状态
+                  subtitleButton.disabled = false;
+                  buttonText.textContent = '生成字幕';
+                  loadingIcon.style.display = 'none'
+                 
+                   // 创建一个下载链接，并触发点击事件
+                   const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'subtitle.srt';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                  
                 } else {
                     const data = await response.json()
                    //结束加载状态
