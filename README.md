@@ -5,3 +5,5 @@
 1. 下载高清版的视频；
 2. 生成高质量的中英双语字幕srt文件。
 
+<img src="./public/screenshot-1.png"/>
+<img src="./public/screenshot-2.png"/>
