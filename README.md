@@ -1,5 +1,7 @@
 # YouTube Downloader and Bilingual Subtitle Generator
 
+![Static Badge](https://img.shields.io/badge/22.0%2B-x?style=flat&logo=Node.js&logoColor=green&label=Node.js&color=green)
+
 This tool allows you to freely download YouTube videos and generate bilingual subtitles.
 
 ## Quick Start
@@ -9,9 +11,9 @@ npm run install
 node index.mjs
 ```
 
-<center>
-<img src="./public/screenshot-3.png" width="400"/>
-</center>
+<div align="center">
+<img src="./public/screenshot-3.png" width="600"/>
+</div>
 
 
 # How it Works
@@ -21,10 +23,10 @@ This application helps you to:
 
 # Result Screenshots
 
-<center>
-<img src="./public/screenshot-1.png" width="400"/>
-<img src="./public/screenshot-2.png" width="400"/>
-</center>
+<div align="center">
+<img src="./public/screenshot-1.png" width="600"/>
+<img src="./public/screenshot-2.png" width="600"/>
+</div>
 
 **Key Features:**
 *   **Free to Use:** Download videos and generate subtitles without any cost.
