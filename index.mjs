@@ -75,9 +75,10 @@ async function convertXmlToSrt(xmlContent) {
                 const end = start + duration;
                 const formattedStartTime = formatTime(start);
                 const formattedEndTime = formatTime(end);
-                const englishText = cue._ ? decodeHTMLEntities(cue._).replace(/\n/g, ' ') : ""; 
-
-            srtContent += `${index}\n${formattedStartTime} --> ${formattedEndTime}\n${englishText.trim()}\n\n`;
+                let englishText = cue._ ? decodeHTMLEntities(cue._).replace(/\n/g, ' ') : ""; 
+                // 处理&#39;
+                englishText = englishText.replace(/&#39;/g, "'");
+                srtContent += `${index}\n${formattedStartTime} --> ${formattedEndTime}\n${englishText.trim()}\n\n`;
                 index++;
             });
             resolve(srtContent);
