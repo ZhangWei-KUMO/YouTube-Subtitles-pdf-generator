@@ -75,7 +75,9 @@
                     downloadInfoDiv.innerHTML = `
                          <p><strong>Title:</strong> ${title}</p>
                          <p><strong>Pixel level:</strong> ${qualityLabel}</p>
-                         <p><strong>link:</strong> <a href="${downloadLink}" download="${title}.${data.video.container}">Download</a></p>
+                         <p><strong>link:</strong> <a href="${downloadLink}" 
+                            target="_blank"
+                            download="${title}.${data.video.container}">Download</a></p>
                     `;
                 } else {
                      buttonText.textContent = 'Get Download Link';

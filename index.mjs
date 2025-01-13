@@ -238,7 +238,8 @@ app.post('/generate-downloadlink', async (req, res) => {
         let video = await downloadYouTubeVideo(youtubeUrl);
         if (video && video.url) {
             // 添加 Content-Disposition 头，强制下载
-            res.setHeader('Content-Disposition', `attachment; filename="${video.title}.${video.container}"`);
+
+            // res.setHeader('Content-Disposition', `attachment; filename="${video.title}.${video.container}"`);
             res.json({ success: true, video: {
                 ...video,
                 downloadUrl:video.url
