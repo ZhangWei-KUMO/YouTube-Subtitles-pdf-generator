@@ -40,9 +40,4 @@ This application helps you to:
 3.  **Submit:** Click the submit button to download the video or generate the bilingual subtitle.
 4.   **Download:** The downloaded video or the generated subtitle file will be downloaded.
 
-**Note:**
 
-*   This application uses third-party services for video download and translations, please be aware of any limitations.
-*   Always use this application in accordance with YouTube's Terms of Service.
-
-This README provides a clear, concise overview of your project, its features, and how to use it. If you have any other details to add, let me know!
