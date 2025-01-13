@@ -21,7 +21,14 @@ This application helps you to:
 * **Download YouTube videos:** Easily download videos in various formats.
 * **Generate Bilingual Subtitles:** Create subtitles with both original audio text and translations. You can select your original language and the target language of the subtitle.
 
-# Result Screenshots
+**How to Use:**
+
+1.  **Input YouTube Link:** Paste the URL of the YouTube video you want to download or create subtitles for.
+2.  **Choose Languages:** Select the original language of the video and the desired language for the translation.
+3.  **Submit:** Click the submit button to download the video or generate the bilingual subtitle.
+4.  **Download:** The downloaded video or the generated subtitle file will be downloaded.
+
+**Result Screenshots**
 
 <div align="center">
 <img src="./public/screenshot-1.png" width="600"/>
@@ -32,12 +39,4 @@ This application helps you to:
 *   **Free to Use:** Download videos and generate subtitles without any cost.
 *   **Bilingual Support:** Create subtitles that show the original language and a translated version.
 *   **Multiple Language Support:** Supports a variety of languages for both original and translated subtitles.
-
-**How to Use:**
-
-1.  **Input YouTube Link:** Paste the URL of the YouTube video you want to download or create subtitles for.
-2.  **Choose Languages:** Select the original language of the video and the desired language for the translation.
-3.  **Submit:** Click the submit button to download the video or generate the bilingual subtitle.
-4.   **Download:** The downloaded video or the generated subtitle file will be downloaded.
-
 
